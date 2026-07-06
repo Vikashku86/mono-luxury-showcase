@@ -25,50 +25,86 @@ const container: Variants = {
 };
 
 const NAV = [
+  { href: "#top", label: "Home" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
-  { href: "#work", label: "Work" },
+  { href: "#work", label: "Projects" },
   { href: "#experience", label: "Experience" },
   { href: "#contact", label: "Contact" },
 ];
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string>("#top");
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  useEffect(() => {
+    const ids = NAV.map((n) => n.href.slice(1));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive("#" + e.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "backdrop-blur-xl bg-background/60 border-b border-border"
-          : "bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        scrolled ? "pt-3" : "pt-6"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="text-sm font-semibold tracking-tight">
-          Alex Carter<span className="text-muted-foreground">.dev</span>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4">
+        <a
+          href="#top"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-4 py-2 text-sm font-semibold tracking-tight backdrop-blur-xl"
+        >
+          <span className="inline-block h-2 w-2 rounded-full bg-white" />
+          Alex Carter
         </a>
-        <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {n.label}
-            </a>
-          ))}
+        <nav className="hidden rounded-full border border-border bg-background/60 p-1.5 backdrop-blur-xl md:block">
+          <ul className="flex items-center gap-1">
+            {NAV.map((n) => {
+              const isActive = active === n.href;
+              return (
+                <li key={n.href} className="relative">
+                  <a
+                    href={n.href}
+                    className={`relative z-10 inline-flex rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                      isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        className="absolute inset-0 -z-10 rounded-full bg-primary"
+                        transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                      />
+                    )}
+                    {n.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
         <a
           href="#contact"
-          className="hidden rounded-2xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03] md:inline-flex"
+          className="hidden items-center gap-1.5 rounded-full border border-border bg-background/60 px-4 py-2 text-xs font-medium backdrop-blur-xl transition-colors hover:bg-secondary md:inline-flex"
         >
-          Get in touch
+          Hire me
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </a>
       </div>
     </header>
