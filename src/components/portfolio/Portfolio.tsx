@@ -268,44 +268,100 @@ function About() {
   );
 }
 
-const SKILLS = [
-  { icon: Code2, title: "Frontend", items: ["React", "Next.js", "TanStack", "TypeScript", "Tailwind"] },
-  { icon: Cpu, title: "Backend", items: ["Node.js", "Bun", "tRPC", "GraphQL", "REST"] },
-  { icon: Database, title: "Data", items: ["PostgreSQL", "Redis", "Prisma", "Drizzle", "SQLite"] },
-  { icon: Cloud, title: "Infra", items: ["AWS", "Cloudflare", "Vercel", "Docker", "Terraform"] },
-  { icon: Layers, title: "Architecture", items: ["Event-driven", "SSR/RSC", "Micro-services", "Design systems"] },
-  { icon: Wrench, title: "Tooling", items: ["Vite", "Turborepo", "GitHub Actions", "Playwright", "Vitest"] },
+type SkillCategory = {
+  title: string;
+  skills: { name: string; pct: number }[];
+};
+
+const SKILL_GROUPS: SkillCategory[] = [
+  {
+    title: "Frontend",
+    skills: [
+      { name: "React / Next.js", pct: 98 },
+      { name: "TypeScript", pct: 95 },
+      { name: "Tailwind CSS", pct: 95 },
+      { name: "TanStack Router / Query", pct: 90 },
+      { name: "Framer Motion", pct: 88 },
+    ],
+  },
+  {
+    title: "Backend",
+    skills: [
+      { name: "Node.js / Express", pct: 96 },
+      { name: "tRPC / GraphQL", pct: 90 },
+      { name: "PostgreSQL", pct: 92 },
+      { name: "Redis", pct: 85 },
+      { name: "Prisma / Drizzle", pct: 90 },
+    ],
+  },
+  {
+    title: "DevOps & Infra",
+    skills: [
+      { name: "AWS", pct: 88 },
+      { name: "Docker", pct: 90 },
+      { name: "Cloudflare / Vercel", pct: 92 },
+      { name: "GitHub Actions", pct: 88 },
+      { name: "Terraform", pct: 82 },
+    ],
+  },
+  {
+    title: "Tools & Others",
+    skills: [
+      { name: "Git", pct: 96 },
+      { name: "Figma", pct: 85 },
+      { name: "Vite / Turborepo", pct: 92 },
+      { name: "Playwright / Vitest", pct: 90 },
+      { name: "Linux / Shell", pct: 88 },
+    ],
+  },
 ];
+
+function SkillBar({ name, pct }: { name: string; pct: number }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-medium">{name}</span>
+        <span className="text-xs tabular-nums text-muted-foreground">{pct}%</span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
+        <motion.div
+          initial={{ width: 0 }}
+          whileInView={{ width: `${pct}%` }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] as const, delay: 0.15 }}
+          className="h-full rounded-full bg-white"
+        />
+      </div>
+    </div>
+  );
+}
 
 function Skills() {
   return (
-    <Section id="skills" eyebrow="Skills" title="A modern stack, chosen deliberately.">
+    <Section id="skills" eyebrow="Skills" title="Technologies I work with every day.">
       <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-80px" }}
         variants={container}
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-8 md:grid-cols-2"
       >
-        {SKILLS.map((s) => {
-          const Icon = s.icon;
-          return (
-            <motion.div
-              key={s.title}
-              variants={fadeUp}
-              whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-border bg-card/40 p-6 backdrop-blur transition-colors hover:border-white/25 hover:bg-card/60"
-            >
-              <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-secondary">
-                <Icon className="h-5 w-5" />
-              </div>
-              <h3 className="mb-3 text-lg font-medium">{s.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {s.items.join(" · ")}
-              </p>
-            </motion.div>
-          );
-        })}
+        {SKILL_GROUPS.map((group) => (
+          <motion.div
+            key={group.title}
+            variants={fadeUp}
+            className="rounded-2xl border border-border bg-card/40 p-6 backdrop-blur"
+          >
+            <h3 className="mb-6 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+              {group.title}
+            </h3>
+            <div className="space-y-5">
+              {group.skills.map((s) => (
+                <SkillBar key={s.name} name={s.name} pct={s.pct} />
+              ))}
+            </div>
+          </motion.div>
+        ))}
       </motion.div>
     </Section>
   );
