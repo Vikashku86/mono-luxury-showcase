@@ -1,7 +1,8 @@
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  ChevronDown,
   Github,
   Linkedin,
   Mail,
@@ -108,9 +109,29 @@ function Navbar() {
 function Hero() {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 400], [0, 80]);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const el = heroRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) / r.width;
+      const y = (e.clientY - r.top - r.height / 2) / r.height;
+      setMouse({ x, y });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
 
   return (
-    <section id="top" className="relative overflow-hidden pt-44 pb-40">
+    <section
+      id="top"
+      ref={heroRef}
+      className="relative overflow-hidden pt-36 pb-32"
+      style={{ backgroundColor: "#050505" }}
+    >
       {/* Premium grid + vignette backdrop */}
       <div
         aria-hidden
@@ -127,70 +148,185 @@ function Hero() {
         style={{ y }}
         className="pointer-events-none absolute inset-0 -z-10 opacity-60"
       >
-        <div className="absolute left-1/2 top-1/2 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.05] blur-3xl" />
+        <div className="absolute left-1/3 top-1/2 h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.06] blur-3xl" />
       </motion.div>
 
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-12">
         <motion.div
           initial="hidden"
           animate="show"
           variants={container}
-          className="max-w-4xl"
+          className="lg:col-span-7"
+          style={{ transform: `translate(${mouse.x * -8}px, ${mouse.y * -8}px)` }}
         >
-          <motion.div variants={fadeUp} className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur">
+          <motion.div
+            variants={fadeUp}
+            className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs text-muted-foreground backdrop-blur-xl"
+          >
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
             </span>
-            Available for new opportunities
+            <span className="tracking-[0.18em] uppercase text-foreground/80">Open to Work</span>
           </motion.div>
 
           <motion.h1
             variants={fadeUp}
-            className="text-5xl font-semibold tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl"
+            className="text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]"
           >
-            Full stack developer
+            Building
             <br />
-            <span className="italic font-light text-muted-foreground">crafting</span>{" "}
-            <span className="text-muted-foreground">quiet software.</span>
+            Modern Web
+            <br />
+            <span className="italic font-light text-muted-foreground">Experiences.</span>
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground"
+            className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            I&apos;m Alex — a software engineer with 6+ years of experience shipping
-            performant web products end-to-end with TypeScript, React, Node, and
-            Postgres.
+            I&apos;m Alex — a full stack engineer designing and shipping fast,
+            elegant products with TypeScript, React and Node.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center gap-3">
             <a
               href="#work"
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-2xl bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-[0_10px_40px_-10px_rgba(255,255,255,0.25)] transition-transform hover:scale-[1.03]"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-[0_10px_40px_-10px_rgba(255,255,255,0.4)] transition-transform hover:scale-[1.03]"
             >
               View projects
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background/60 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-secondary"
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-medium text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
             >
               Contact me
             </a>
           </motion.div>
 
+          <motion.div variants={fadeUp} className="mt-10 flex items-center gap-2">
+            {[
+              { icon: Github, href: "#", label: "GitHub" },
+              { icon: Linkedin, href: "#", label: "LinkedIn" },
+              { icon: Twitter, href: "#", label: "Twitter" },
+              { icon: Mail, href: "#contact", label: "Email" },
+            ].map((s) => {
+              const Icon = s.icon;
+              return (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-muted-foreground backdrop-blur transition-all hover:-translate-y-0.5 hover:border-white/25 hover:text-foreground"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              );
+            })}
+          </motion.div>
+        </motion.div>
+
+        {/* MacBook mockup */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="relative lg:col-span-5"
+          style={{ transform: `translate(${mouse.x * 14}px, ${mouse.y * 14}px)` }}
+        >
           <motion.div
-            variants={fadeUp}
-            className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-muted-foreground"
+            animate={{ y: [0, -14, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="relative mx-auto w-full max-w-xl"
           >
-            <span>Previously at</span>
-            <span className="text-foreground/70">Vault Financial</span>
-            <span className="text-foreground/70">Northwind Labs</span>
-            <span className="text-foreground/70">Mesa Digital</span>
+            {/* Glow */}
+            <div className="absolute inset-x-8 -bottom-6 h-24 rounded-[50%] bg-white/10 blur-2xl" />
+            {/* Screen */}
+            <div className="relative rounded-t-2xl border border-white/15 bg-neutral-950 p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+              <div className="flex items-center gap-1.5 px-2 pb-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                <span className="ml-3 truncate text-[10px] text-muted-foreground">
+                  alexcarter.dev
+                </span>
+              </div>
+              <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-white/10 bg-black">
+                {/* mini portfolio preview */}
+                <div
+                  className="absolute inset-0 opacity-[0.12]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+                    backgroundSize: "28px 28px",
+                  }}
+                />
+                <div className="absolute inset-0 flex flex-col justify-between p-5">
+                  <div className="flex items-center justify-between text-[9px] text-muted-foreground">
+                    <span>alex carter</span>
+                    <span className="flex gap-3">
+                      <span>work</span><span>about</span><span>contact</span>
+                    </span>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Portfolio · 2026
+                    </div>
+                    <div className="mt-1 text-lg font-semibold leading-tight text-foreground">
+                      Modern web,
+                      <br />crafted quietly.
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[0, 1, 2].map((i) => (
+                      <div key={i} className="h-10 rounded-md border border-white/10 bg-white/[0.03]" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Base */}
+            <div className="relative mx-auto h-3 w-[108%] -translate-x-[3.7%] rounded-b-xl bg-gradient-to-b from-neutral-800 to-neutral-950 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.8)]">
+              <div className="mx-auto h-1 w-24 rounded-b-lg bg-neutral-900" />
+            </div>
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Previously at */}
+      <div className="mx-auto mt-24 max-w-7xl px-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="flex flex-wrap items-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-muted-foreground"
+        >
+          <span>Previously at</span>
+          <span className="text-foreground/70">Vault Financial</span>
+          <span className="text-foreground/70">Northwind Labs</span>
+          <span className="text-foreground/70">Mesa Digital</span>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.a
+        href="#about"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground"
+        aria-label="Scroll down"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-1"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+          <ChevronDown className="h-4 w-4" />
+        </motion.div>
+      </motion.a>
     </section>
   );
 }
