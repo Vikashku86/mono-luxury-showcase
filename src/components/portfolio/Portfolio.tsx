@@ -6,12 +6,6 @@ import {
   Linkedin,
   Mail,
   Twitter,
-  Code2,
-  Database,
-  Cloud,
-  Wrench,
-  Layers,
-  Cpu,
 } from "lucide-react";
 
 const fadeUp: Variants = {
