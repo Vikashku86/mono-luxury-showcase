@@ -129,7 +129,7 @@ function Hero() {
     <section
       id="top"
       ref={heroRef}
-      className="relative overflow-hidden pt-36 pb-32"
+      className="relative overflow-hidden pt-28 pb-24 sm:pt-32 sm:pb-28 lg:pt-36 lg:pb-32"
       style={{ backgroundColor: "#050505" }}
     >
       {/* Premium grid + vignette backdrop */}
@@ -151,7 +151,7 @@ function Hero() {
         <div className="absolute left-1/3 top-1/2 h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.06] blur-3xl" />
       </motion.div>
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-12">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16">
         <motion.div
           initial="hidden"
           animate="show"
@@ -161,7 +161,7 @@ function Hero() {
         >
           <motion.div
             variants={fadeUp}
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs text-muted-foreground backdrop-blur-xl"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-[10px] text-muted-foreground backdrop-blur-xl sm:mb-8 sm:px-4 sm:text-xs"
           >
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />
@@ -172,7 +172,7 @@ function Hero() {
 
           <motion.h1
             variants={fadeUp}
-            className="text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]"
+           className="text-[2.5rem] font-semibold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]"
           >
             Building
             <br />
@@ -183,29 +183,29 @@ function Hero() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-8 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+            className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg"
           >
             I&apos;m Alex — a full stack engineer designing and shipping fast,
             elegant products with TypeScript, React and Node.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center gap-3">
+          <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center">
             <a
               href="#work"
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-[0_10px_40px_-10px_rgba(255,255,255,0.4)] transition-transform hover:scale-[1.03]"
+              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-5 py-3 text-sm font-medium text-black shadow-[0_10px_40px_-10px_rgba(255,255,255,0.4)] transition-transform hover:scale-[1.03] sm:px-6"
             >
               View projects
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-sm font-medium text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08]"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-5 py-3 text-sm font-medium text-foreground backdrop-blur-xl transition-colors hover:bg-white/[0.08] sm:px-6"
             >
               Contact me
             </a>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-10 flex items-center gap-2">
+          <motion.div variants={fadeUp} className="mt-8 flex items-center gap-2 sm:mt-10">
             {[
               { icon: Github, href: "#", label: "GitHub" },
               { icon: Linkedin, href: "#", label: "LinkedIn" },
@@ -232,27 +232,27 @@ function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="relative lg:col-span-5"
+          className="relative w-full lg:col-span-5"
           style={{ transform: `translate(${mouse.x * 14}px, ${mouse.y * 14}px)` }}
         >
           <motion.div
             animate={{ y: [0, -14, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="relative mx-auto w-full max-w-xl"
+            className="relative mx-auto w-full max-w-sm sm:max-w-md lg:max-w-xl"
           >
             {/* Glow */}
-            <div className="absolute inset-x-8 -bottom-6 h-24 rounded-[50%] bg-white/10 blur-2xl" />
+            <div className="absolute inset-x-6 -bottom-4 h-16 rounded-[50%] bg-white/10 blur-2xl sm:inset-x-8 sm:-bottom-6 sm:h-24" />
             {/* Screen */}
-            <div className="relative rounded-t-2xl border border-white/15 bg-neutral-950 p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl">
-              <div className="flex items-center gap-1.5 px-2 pb-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-                <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-                <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-                <span className="ml-3 truncate text-[10px] text-muted-foreground">
+            <div className="relative rounded-t-xl border border-white/15 bg-neutral-950 p-1.5 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:rounded-t-2xl sm:p-2">
+              <div className="flex items-center gap-1.5 px-1.5 pb-1.5 sm:px-2 sm:pb-2">
+                <span className="h-2 w-2 rounded-full bg-white/20 sm:h-2.5 sm:w-2.5" />
+                <span className="h-2 w-2 rounded-full bg-white/20 sm:h-2.5 sm:w-2.5" />
+                <span className="h-2 w-2 rounded-full bg-white/20 sm:h-2.5 sm:w-2.5" />
+                <span className="ml-2 truncate text-[9px] text-muted-foreground sm:ml-3 sm:text-[10px]">
                   alexcarter.dev
                 </span>
               </div>
-              <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-white/10 bg-black">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-white/10 bg-black sm:rounded-lg">
                 {/* mini portfolio preview */}
                 <div
                   className="absolute inset-0 opacity-[0.12]"
@@ -262,45 +262,45 @@ function Hero() {
                     backgroundSize: "28px 28px",
                   }}
                 />
-                <div className="absolute inset-0 flex flex-col justify-between p-5">
-                  <div className="flex items-center justify-between text-[9px] text-muted-foreground">
+                <div className="absolute inset-0 flex flex-col justify-between p-3 sm:p-5">
+                  <div className="flex items-center justify-between text-[8px] text-muted-foreground sm:text-[9px]">
                     <span>alex carter</span>
-                    <span className="flex gap-3">
+                    <span className="flex gap-2 sm:gap-3">
                       <span>work</span><span>about</span><span>contact</span>
                     </span>
                   </div>
                   <div>
-                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                    <div className="text-[9px] uppercase tracking-widest text-muted-foreground sm:text-[10px]">
                       Portfolio · 2026
                     </div>
-                    <div className="mt-1 text-lg font-semibold leading-tight text-foreground">
+                    <div className="mt-1 text-sm font-semibold leading-tight text-foreground sm:text-lg">
                       Modern web,
                       <br />crafted quietly.
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                     {[0, 1, 2].map((i) => (
-                      <div key={i} className="h-10 rounded-md border border-white/10 bg-white/[0.03]" />
+                      <div key={i} className="h-6 rounded border border-white/10 bg-white/[0.03] sm:h-10 sm:rounded-md" />
                     ))}
                   </div>
                 </div>
               </div>
             </div>
             {/* Base */}
-            <div className="relative mx-auto h-3 w-[108%] -translate-x-[3.7%] rounded-b-xl bg-gradient-to-b from-neutral-800 to-neutral-950 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.8)]">
-              <div className="mx-auto h-1 w-24 rounded-b-lg bg-neutral-900" />
+            <div className="relative mx-auto h-2 w-[108%] -translate-x-[3.7%] rounded-b-lg bg-gradient-to-b from-neutral-800 to-neutral-950 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.8)] sm:h-3 sm:rounded-b-xl">
+              <div className="mx-auto h-0.5 w-16 rounded-b-md bg-neutral-900 sm:h-1 sm:w-24 sm:rounded-b-lg" />
             </div>
           </motion.div>
         </motion.div>
       </div>
 
       {/* Previously at */}
-      <div className="mx-auto mt-24 max-w-7xl px-6">
+      <div className="mx-auto mt-16 max-w-7xl px-4 sm:mt-24 sm:px-6">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex flex-wrap items-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-muted-foreground"
+          className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:gap-x-10 sm:gap-y-4 sm:text-xs sm:tracking-[0.2em]"
         >
           <span>Previously at</span>
           <span className="text-foreground/70">Vault Financial</span>
