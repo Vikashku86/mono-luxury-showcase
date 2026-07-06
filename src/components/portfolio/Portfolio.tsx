@@ -25,50 +25,86 @@ const container: Variants = {
 };
 
 const NAV = [
+  { href: "#top", label: "Home" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
-  { href: "#work", label: "Work" },
+  { href: "#work", label: "Projects" },
   { href: "#experience", label: "Experience" },
   { href: "#contact", label: "Contact" },
 ];
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<string>("#top");
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  useEffect(() => {
+    const ids = NAV.map((n) => n.href.slice(1));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive("#" + e.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "backdrop-blur-xl bg-background/60 border-b border-border"
-          : "bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        scrolled ? "pt-3" : "pt-6"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="text-sm font-semibold tracking-tight">
-          Alex Carter<span className="text-muted-foreground">.dev</span>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4">
+        <a
+          href="#top"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-4 py-2 text-sm font-semibold tracking-tight backdrop-blur-xl"
+        >
+          <span className="inline-block h-2 w-2 rounded-full bg-white" />
+          Alex Carter
         </a>
-        <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {n.label}
-            </a>
-          ))}
+        <nav className="hidden rounded-full border border-border bg-background/60 p-1.5 backdrop-blur-xl md:block">
+          <ul className="flex items-center gap-1">
+            {NAV.map((n) => {
+              const isActive = active === n.href;
+              return (
+                <li key={n.href} className="relative">
+                  <a
+                    href={n.href}
+                    className={`relative z-10 inline-flex rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
+                      isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        className="absolute inset-0 -z-10 rounded-full bg-primary"
+                        transition={{ type: "spring", stiffness: 400, damping: 34 }}
+                      />
+                    )}
+                    {n.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
         <a
           href="#contact"
-          className="hidden rounded-2xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03] md:inline-flex"
+          className="hidden items-center gap-1.5 rounded-full border border-border bg-background/60 px-4 py-2 text-xs font-medium backdrop-blur-xl transition-colors hover:bg-secondary md:inline-flex"
         >
-          Get in touch
+          Hire me
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </a>
       </div>
     </header>
@@ -80,12 +116,24 @@ function Hero() {
   const y = useTransform(scrollY, [0, 400], [0, 80]);
 
   return (
-    <section id="top" className="relative overflow-hidden pt-40 pb-32">
+    <section id="top" className="relative overflow-hidden pt-44 pb-40">
+      {/* Premium grid + vignette backdrop */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-20 opacity-[0.07]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage:
+            "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+        }}
+      />
       <motion.div
         style={{ y }}
-        className="pointer-events-none absolute inset-0 -z-10 opacity-40"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-60"
       >
-        <div className="absolute left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-white/[0.04] blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.05] blur-3xl" />
       </motion.div>
 
       <div className="mx-auto max-w-6xl px-6">
@@ -96,7 +144,10 @@ function Hero() {
           className="max-w-4xl"
         >
           <motion.div variants={fadeUp} className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
+            </span>
             Available for new opportunities
           </motion.div>
 
@@ -106,7 +157,8 @@ function Hero() {
           >
             Full stack developer
             <br />
-            <span className="text-muted-foreground">crafting quiet software.</span>
+            <span className="italic font-light text-muted-foreground">crafting</span>{" "}
+            <span className="text-muted-foreground">quiet software.</span>
           </motion.h1>
 
           <motion.p
@@ -121,17 +173,27 @@ function Hero() {
           <motion.div variants={fadeUp} className="mt-10 flex flex-wrap items-center gap-3">
             <a
               href="#work"
-              className="group inline-flex items-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]"
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-2xl bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-[0_10px_40px_-10px_rgba(255,255,255,0.25)] transition-transform hover:scale-[1.03]"
             >
-              View work
+              View projects
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+              className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background/60 px-6 py-3 text-sm font-medium text-foreground backdrop-blur transition-colors hover:bg-secondary"
             >
               Contact me
             </a>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-muted-foreground"
+          >
+            <span>Previously at</span>
+            <span className="text-foreground/70">Vault Financial</span>
+            <span className="text-foreground/70">Northwind Labs</span>
+            <span className="text-foreground/70">Mesa Digital</span>
           </motion.div>
         </motion.div>
       </div>
